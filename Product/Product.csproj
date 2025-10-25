@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <PackageReference Include="Grpc.AspNetCore" Version="2.71.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="9.0.10" />
   </ItemGroup>
 
   <ItemGroup>
@@ -15,5 +16,5 @@
   </ItemGroup>
 
   <ItemGroup>
-	  <Protobuf Include="..\Shared\Protos\**\*.proto" GrpcServices="Server" OutputDir="$(IntermediateOutputPath)Protos"/>  </ItemGroup>
+	  <Protobuf Include="..\Shared\Protos\**\*.proto" GrpcServices="Server" OutputDir="$(IntermediateOutputPath)Protos" />  </ItemGroup>
 </Project>
