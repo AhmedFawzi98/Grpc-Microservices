@@ -5,17 +5,17 @@ using ProductEntity = Product.Models.Product;
 
 namespace Product.Data;
 
-public class ProductDbSeeder(ProductContext productContext) : IDbSeeder
+public class ProductDbSeeder(ProductDbContext productDbContext) : IDbSeeder
 {
     public async Task SeedAsync()
     {
         await SeedProductsAsync();
-        await productContext.SaveChangesAsync();
+        await productDbContext.SaveChangesAsync();
     }
 
     private async Task SeedProductsAsync()
     {
-        if (await productContext.Products.AnyAsync())
+        if (await productDbContext.Products.AnyAsync())
             return;
 
         var products = new List<ProductEntity>
@@ -62,6 +62,6 @@ public class ProductDbSeeder(ProductContext productContext) : IDbSeeder
             }
         };
 
-        productContext.AddRange(products);
+        productDbContext.AddRange(products);
     }
 }

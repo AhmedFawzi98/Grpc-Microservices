@@ -3,7 +3,7 @@ using Shared.DbSeeding;
 
 namespace Product.HostedServices;
 
-public class DbSeeder(IServiceScopeFactory serviceScopeFactory) : IHostedService
+public class DbInitalizer(IServiceScopeFactory serviceScopeFactory) : IHostedService
 {
     public async Task StartAsync(CancellationToken cancellationToken)
     {

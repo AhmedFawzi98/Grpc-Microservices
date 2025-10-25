@@ -2,7 +2,7 @@
 
 public enum ProductStatus
 {
-    Instock = 1,
-    Low = 2,
-    None = 3,
+    Instock = 0,
+    Low = 1,
+    None = 2,
 }

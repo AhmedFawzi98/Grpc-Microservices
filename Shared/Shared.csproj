@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-	  <Protobuf Include="Protos\**\*.proto" />
+	  <None Include="Protos\**\*.proto" />
   </ItemGroup>
 
 </Project>

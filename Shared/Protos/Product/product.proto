@@ -1,0 +1,65 @@
+syntax = "proto3";
+
+option csharp_namespace = "Grpc.Product"; 
+
+package product; 
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/empty.proto";
+import "CustomTypes/custom_types.proto";
+
+service ProductGrpcService 
+{
+	rpc GetProduct(GetProductRequest) returns (Product);
+
+	rpc GetAllProducts(GetAllProductsRequest) returns (stream Product);
+
+	rpc AddProduct(AddProductRequest) returns (Product);
+	rpc UpdateProduct(UpdateProductRequest) returns (Product);
+	rpc DeleteProduct(DeleteProductRequest) returns (Product);
+
+	rpc InsertBulkProducts(stream Product) returns (InsertBulkProductsResponse);
+
+	rpc Test(google.protobuf.Empty) returns (google.protobuf.Empty);
+
+}
+
+message GetProductRequest {
+	int32 id = 1;
+}
+
+message GetAllProductsRequest {
+}
+
+
+message AddProductRequest {
+	Product product = 1;
+}
+
+message UpdateProductRequest {
+	Product product = 1;
+}
+
+message DeleteProductRequest {
+	bool success = 1;
+}
+
+message InsertBulkProductsResponse {
+	bool success = 1;
+	int32 insert_count = 2;
+}
+
+message Product {
+	int32 id = 1;
+	string name = 2;
+	optional string description = 3;
+	grpc_custom_types.GrpcDecimal price = 4;
+	ProductStatus product_status = 5;
+	google.protobuf.Timestamp created_date = 6;
+}
+
+enum ProductStatus{
+	INSTOCK = 0;
+    LOW = 1;
+    NONE = 2;
+}
