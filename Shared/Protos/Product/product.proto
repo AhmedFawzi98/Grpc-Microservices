@@ -16,7 +16,7 @@ service ProductGrpcService
 
 	rpc AddProduct(AddProductRequest) returns (Product);
 	rpc UpdateProduct(UpdateProductRequest) returns (Product);
-	rpc DeleteProduct(DeleteProductRequest) returns (Product);
+	rpc DeleteProduct(DeleteProductRequest) returns (DeleteProductResponse);
 
 	rpc InsertBulkProducts(stream Product) returns (InsertBulkProductsResponse);
 
@@ -33,14 +33,23 @@ message GetAllProductsRequest {
 
 
 message AddProductRequest {
-	Product product = 1;
+	string name = 1;
+	optional string description = 2;
+	grpc_custom_types.GrpcDecimal price = 3;
 }
 
 message UpdateProductRequest {
-	Product product = 1;
+	int32 id = 1;
+	string name = 2;
+	optional string description = 3;
+	grpc_custom_types.GrpcDecimal price = 4;
 }
 
 message DeleteProductRequest {
+	int32 id = 1;
+}
+
+message DeleteProductResponse {
 	bool success = 1;
 }
 
@@ -57,6 +66,7 @@ message Product {
 	ProductStatus product_status = 5;
 	google.protobuf.Timestamp created_date = 6;
 }
+
 
 enum ProductStatus{
 	INSTOCK = 0;

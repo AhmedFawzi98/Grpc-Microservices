@@ -3,6 +3,7 @@ using Product.Data;
 using Product.Data.Constants;
 using Product.HostedServices;
 using Shared.DbSeeding;
+using System.Reflection;
 
 namespace Product.Extensions;
 
@@ -13,6 +14,11 @@ public static class IServiceCollectionExtension
         services.AddGrpc();
 
         AddDataAccessServices(services, configuration);
+
+        services.AddAutoMapper(options =>
+        {
+            options.AddMaps(Assembly.GetExecutingAssembly());
+        });
 
         return services;
     }
