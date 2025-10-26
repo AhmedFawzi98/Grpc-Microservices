@@ -18,7 +18,7 @@ service ProductGrpcService
 	rpc UpdateProduct(UpdateProductRequest) returns (Product);
 	rpc DeleteProduct(DeleteProductRequest) returns (DeleteProductResponse);
 
-	rpc InsertBulkProducts(stream Product) returns (InsertBulkProductsResponse);
+	rpc InsertBulkProducts(stream AddProductRequest) returns (InsertBulkProductsResponse);
 
 	rpc Test(google.protobuf.Empty) returns (google.protobuf.Empty);
 

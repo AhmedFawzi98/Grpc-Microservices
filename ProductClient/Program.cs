@@ -26,7 +26,11 @@ await productRunner.UpdateProductAsync();
 
 await productRunner.DeleteProductAsync();
 
-await productRunner.GetAllProductsAsync();
+await productRunner.GetAllProductsAsync(); //check
+
+await productRunner.InsertBulkProductsAsync();
+
+await productRunner.GetAllProductsAsync(); //check
 
 public class ProductRunner
 {
@@ -114,7 +118,46 @@ public class ProductRunner
         Console.ReadLine();
     }
 
-    
+    public async Task InsertBulkProductsAsync()
+    {
+        Console.WriteLine("------ InsertBulkProductsAsync Start--------");
 
+        var asyncClientStreamingCall = _client.InsertBulkProducts();
 
+        var addProductRequests = new List<AddProductRequest>()
+        {
+            new AddProductRequest()
+            {
+                Name = "streaming product 1",
+                Description = "a product(1) to stream to server",
+                Price = 44.93m,
+            },
+            new AddProductRequest()
+            {
+                Name = "streaming product 2",
+                Description = "a product(2) to stream to server",
+                Price = 55.32m,
+            },
+            new AddProductRequest()
+            {
+                Name = "streaming product 3",
+                Description = "a product(3) to stream to server",
+                Price = 93.15m,
+            },
+        };
+
+        foreach (var addProductRequest in addProductRequests)
+        {
+            await asyncClientStreamingCall.RequestStream.WriteAsync(addProductRequest);
+        }
+
+        await asyncClientStreamingCall.RequestStream.CompleteAsync();
+
+        var response = await asyncClientStreamingCall;
+
+        Console.WriteLine(response);
+        Console.WriteLine("------ InsertBulkProductsAsync End--------");
+
+        Console.ReadLine();
+    }
 }

@@ -93,4 +93,23 @@ public class ProductService(ProductDbContext productDbContext, IMapper mapper) :
 
         return deleteProductResponse;
     }
+
+    public override async Task<InsertBulkProductsResponse> InsertBulkProducts(IAsyncStreamReader<AddProductRequest> requestStream, ServerCallContext context)
+    {
+        await foreach (var addProductRequest in requestStream.ReadAllAsync())
+        {
+            var product = mapper.Map<ProductEntity>(addProductRequest);
+            productDbContext.Products.Add(product);
+        }
+
+        var insertCount = await productDbContext.SaveChangesAsync();
+
+        var insertBulkProductsResponse = new InsertBulkProductsResponse()
+        {
+            Success = insertCount > 0,
+            InsertCount = insertCount,
+        };
+
+        return insertBulkProductsResponse;
+    }
 }
