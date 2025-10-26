@@ -13,12 +13,19 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Shared\Shared.csproj" />
+	  <Protobuf Include="..\..\Shared\Shared\Protos\Product\*.proto"
+				GrpcServices="Server"
+				OutputDir="$(IntermediateOutputPath)Protos"
+				ProtoRoot="..\..\Shared\Shared\Protos" />
+	  
+	  <Protobuf Include="..\..\Shared\Shared\Protos\CustomTypes\*.proto"
+				GrpcServices="None"
+				OutputDir="$(IntermediateOutputPath)Protos"
+				ProtoRoot="..\..\Shared\Shared\Protos" />
   </ItemGroup>
 
   <ItemGroup>
-	  <Protobuf Include="..\Shared\Protos\Product\*.proto" GrpcServices="Server" OutputDir="$(IntermediateOutputPath)Protos" ProtoRoot="..\Shared\Protos" />
-	  <Protobuf Include="..\Shared\Protos\CustomTypes\*.proto" GrpcServices="None" OutputDir="$(IntermediateOutputPath)Protos" ProtoRoot="..\Shared\Protos" />
+    <ProjectReference Include="..\..\Shared\Shared\Shared.csproj" />
   </ItemGroup>
 	
 
