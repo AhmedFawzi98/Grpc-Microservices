@@ -22,7 +22,7 @@ message GetShoppingCartRequest{
 message AddShoppingCartRequest{
 	string username = 1;
 	string discount_code = 2;
-	ShoppingCartItemToAdd shopping_cart_item = 3; 
+	repeated ShoppingCartItemToAdd shopping_cart_items = 3; 
 }
 
 message AddItemIntoShoppingCartRequest{
@@ -41,7 +41,6 @@ message ShoppingCartItemToAdd{
 
 message AddItemIntoShoppingCartResponse{
 	bool sucess = 1;
-	int32 insertCount = 2;
 }
 
 
@@ -58,6 +57,7 @@ message ShoppingCart{
 	int32 id = 1;
 	string username = 2;
 	repeated ShoppingCartItem shopping_cart_items = 3;
+	int32 total_price = 4;
 }
 
 message ShoppingCartItem{

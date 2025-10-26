@@ -106,7 +106,7 @@ public class ProductService(ProductDbContext productDbContext, IMapper mapper) :
 
         var insertBulkProductsResponse = new InsertBulkProductsResponse()
         {
-            Success = insertCount > 0,
+            Success = true,
             InsertCount = insertCount,
         };
 
