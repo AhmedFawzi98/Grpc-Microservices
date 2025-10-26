@@ -10,7 +10,7 @@ using var host = Host.CreateDefaultBuilder(args)
         {
             options.Address = new Uri("https://localhost:5001");
         });
-        services.AddTransient<ProductRunner>();
+        services.AddSingleton<ProductRunner>();
     })
     .Build();
 
