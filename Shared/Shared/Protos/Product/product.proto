@@ -35,14 +35,14 @@ message GetAllProductsRequest {
 message AddProductRequest {
 	string name = 1;
 	optional string description = 2;
-	grpc_custom_types.GrpcDecimal price = 3;
+	grpc.customtypes.GrpcDecimal price = 3;
 }
 
 message UpdateProductRequest {
 	int32 id = 1;
 	string name = 2;
 	optional string description = 3;
-	grpc_custom_types.GrpcDecimal price = 4;
+	grpc.customtypes.GrpcDecimal price = 4;
 }
 
 message DeleteProductRequest {
@@ -62,7 +62,7 @@ message Product {
 	int32 id = 1;
 	string name = 2;
 	optional string description = 3;
-	grpc_custom_types.GrpcDecimal price = 4;
+	grpc.customtypes.GrpcDecimal price = 4;
 	ProductStatus product_status = 5;
 	google.protobuf.Timestamp created_date = 6;
 }

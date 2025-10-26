@@ -1,6 +1,6 @@
 syntax = "proto3";
                                     
-package grpc_custom_types;
+package grpc.customtypes;
                                     
 option csharp_namespace = "Grpc.CustomTypes"; 
 

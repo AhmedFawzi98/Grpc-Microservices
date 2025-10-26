@@ -1,0 +1,70 @@
+syntax = "proto3";
+
+option csharp_namespace = "Grpc.ShoppingCart"; 
+
+package shoppingcart; 
+
+import "CustomTypes/custom_types.proto";
+
+service ShoppingCartGrpcService{
+	rpc GetShoppingCart(GetShoppingCartRequest) returns (ShoppingCart);
+
+	rpc AddShoppingCart(AddShoppingCartRequest) returns (ShoppingCart);
+
+	rpc AddItemIntoShoppingCart(stream AddItemIntoShoppingCartRequest) returns (AddItemIntoShoppingCartResponse);
+	rpc DeleteItemFromShoppingCart(DeleteItemFromShoppingCartRequest) returns (DeleteItemFromShoppingCartResponse);
+}
+
+message GetShoppingCartRequest{
+	string username = 1;
+}
+
+message AddShoppingCartRequest{
+	string username = 1;
+	string discount_code = 2;
+	ShoppingCartItemToAdd shopping_cart_item = 3; 
+}
+
+message AddItemIntoShoppingCartRequest{
+	string username = 1;
+	string discount_code = 2;
+	ShoppingCartItemToAdd shopping_cart_item = 3; 
+}
+
+message ShoppingCartItemToAdd{
+	int32 quantity = 1;
+	string color = 2;
+	grpc.customtypes.GrpcDecimal price = 3;
+	int32 product_id = 4;
+	string product_name = 5;
+}
+
+message AddItemIntoShoppingCartResponse{
+	bool sucess = 1;
+	int32 insertCount = 2;
+}
+
+
+message DeleteItemFromShoppingCartRequest{
+	string username = 1;
+	int32 shopping_cart_item_id = 2;
+}
+
+message DeleteItemFromShoppingCartResponse{
+	bool sucess = 1;
+}
+
+message ShoppingCart{
+	int32 id = 1;
+	string username = 2;
+	repeated ShoppingCartItem shopping_cart_items = 3;
+}
+
+message ShoppingCartItem{
+	int32 id = 1;
+	int32 quantity = 2;
+	string color = 3;
+	grpc.customtypes.GrpcDecimal price = 4;
+	int32 product_id = 5;
+	string product_name = 6;
+}
