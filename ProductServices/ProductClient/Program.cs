@@ -24,6 +24,8 @@ await productRunner.AddProductAsync();
 
 await productRunner.UpdateProductAsync();
 
+await productRunner.GetAllProductsAsync(); //check
+
 await productRunner.DeleteProductAsync();
 
 await productRunner.GetAllProductsAsync(); //check
@@ -90,9 +92,9 @@ public class ProductRunner
         Console.WriteLine("------ UpdateProductAsync Start--------");
         var request = new UpdateProductRequest()
         {
-            Id = 1,
-            Name = "Wireless Mouse - updated",
-            Description = "A comfortable, high-precision wireless mouse with long battery life - updated",
+            Id = 6,
+            Name = "my new product 1 - updated",
+            Description = "a new test product (1) to add to stock - updated",
             Price = 55.99m,
         };
 
@@ -108,7 +110,7 @@ public class ProductRunner
         Console.WriteLine("------ DeleteProductAsync Start--------");
         var request = new DeleteProductRequest()
         {
-            Id = 2,
+            Id = 6,
         };
 
         var response = await _client.DeleteProductAsync(request);

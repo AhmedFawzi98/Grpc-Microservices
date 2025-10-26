@@ -10,4 +10,8 @@
 	  <None Include="Protos\**\*.proto" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Protos\ShoppingCart\" />
+  </ItemGroup>
+
 </Project>

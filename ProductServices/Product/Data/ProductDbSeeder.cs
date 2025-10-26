@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Product.Enums;
 using Shared.DbSeeding;
-using ProductEntity = Product.Models.Product;
+using ProductEntity = Product.Data.Models.Product;
 
 namespace Product.Data;
 

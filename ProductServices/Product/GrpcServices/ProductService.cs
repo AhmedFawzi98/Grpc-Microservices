@@ -6,7 +6,7 @@ using Product.Data;
 using Product.Helpers.GrpcHelpers;
 using static Grpc.Product.ProductGrpcService;
 using ProductResponse = Grpc.Product.Product;
-using ProductEntity = Product.Models.Product;
+using ProductEntity = Product.Data.Models.Product;
 using AutoMapper;
 namespace Product.GrpcServices;
 

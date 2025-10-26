@@ -9,6 +9,10 @@
       {
         "Path": "ProductServices\\ProductClient\\ProductClient.csproj",
         "Action": "Start"
+      },
+      {
+        "Path": "ShoppingCartServices\\ShoppingCart\\ShoppingCart.csproj",
+        "Action": "Start"
       }
     ]
   }

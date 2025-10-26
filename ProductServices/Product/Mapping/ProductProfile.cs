@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using ProductResponse = Grpc.Product.Product;
-using ProductEntity = Product.Models.Product;
+using ProductEntity = Product.Data.Models.Product;
 using Product.Helpers.GrpcHelpers;
 using Google.Protobuf.WellKnownTypes;
 using Grpc.Product;

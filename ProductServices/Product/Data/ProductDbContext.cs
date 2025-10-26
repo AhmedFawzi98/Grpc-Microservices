@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using ProductEntity = Product.Models.Product;
+using ProductEntity = Product.Data.Models.Product;
 
 namespace Product.Data;
 

@@ -1,6 +1,6 @@
 ﻿using Product.Enums;
 
-namespace Product.Models;
+namespace Product.Data.Models;
 
 public class Product
 {
