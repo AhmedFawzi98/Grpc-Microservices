@@ -36,7 +36,7 @@ public class ProductService(ProductDbContext productDbContext, IMapper mapper) :
         ServerCallContext context)
     {
         //for simplicity, no filtering/pagination paramters sent in GetAllProductsRequest
-        IAsyncEnumerable<ProductEntity> products = productDbContext.Products.AsAsyncEnumerable();
+        IAsyncEnumerable<ProductEntity> products = productDbContext.Products.OrderBy(product => product.Id).AsAsyncEnumerable();
 
         await foreach(var product in products)
         {
