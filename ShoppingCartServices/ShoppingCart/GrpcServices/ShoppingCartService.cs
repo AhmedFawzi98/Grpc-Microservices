@@ -3,14 +3,20 @@ using Grpc.Core;
 using Grpc.ShoppingCart;
 using Microsoft.EntityFrameworkCore;
 using ShoppingCart.Data;
+using ShoppingCart.Integration;
+using static Grpc.Discount.DiscountGrpcService;
 using static Grpc.ShoppingCart.ShoppingCartGrpcService;
-using ShoppingCartResponse = Grpc.ShoppingCart.ShoppingCart;
 using ShoppingCartEntity = ShoppingCart.Data.Models.ShoppingCart;
 using ShoppingCartItemEntity = ShoppingCart.Data.Models.ShoppingCartItem;
+using ShoppingCartResponse = Grpc.ShoppingCart.ShoppingCart;
 
 namespace ShoppingCart.GrpcServices;
 
-public class ShoppingCartService(ShoppingCartDbContext shoppingCartDbContext, IMapper mapper) : ShoppingCartGrpcServiceBase
+public class ShoppingCartService(
+    ShoppingCartDbContext shoppingCartDbContext,
+    IDiscountIntegrationService discountIntegrationService,
+    IMapper mapper)
+    : ShoppingCartGrpcServiceBase
 {
     public override async Task<Grpc.ShoppingCart.ShoppingCart> GetShoppingCart(GetShoppingCartRequest request, ServerCallContext context)
     {
@@ -54,11 +60,11 @@ public class ShoppingCartService(ShoppingCartDbContext shoppingCartDbContext, IM
 
         var shoppingCartItemEntities = mapper.Map<List<ShoppingCartItemEntity>>(items);
 
-        //todo: instead of hardcoded value, call discount service (gRPC call) to get discount for each item type
-        var discount = 100m;
+        var discountDto = await discountIntegrationService.GetDiscountAsync(request.DiscountCode);
+
         foreach (var shoppingCartItemEntity in shoppingCartItemEntities)
         {
-            shoppingCartItemEntity.Price -= discount;
+            shoppingCartItemEntity.Price -= discountDto.Amount;
         }
 
         shoppingCart.Items.AddRange(shoppingCartItemEntities);
@@ -124,9 +130,8 @@ public class ShoppingCartService(ShoppingCartDbContext shoppingCartDbContext, IM
             {
                 var shoppingCartItemEntity = mapper.Map<ShoppingCartItemEntity>(shoppingCartItemToAdd);
 
-                //todo: instead of hardcoded value, call discount service (gRPC call) to get discount for item
-                var discount = 100m;
-                shoppingCartItemEntity.Price -= discount;
+                var discountDto = await discountIntegrationService.GetDiscountAsync(addItemIntoShoppingCartRequest.DiscountCode);
+                shoppingCartItemEntity.Price -= discountDto.Amount;
 
                 shoppingCart!.Items.Add(shoppingCartItemEntity);
             }
