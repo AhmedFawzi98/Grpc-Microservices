@@ -1,12 +1,10 @@
-﻿using Discount.GrpcServices;
-
-namespace Discount.Extensions;
+﻿namespace Discount.Extensions;
 
 public static class WebApplicationExtensions
 {
     public static WebApplication ConfigureWebApplication(this WebApplication app)
     {
-        app.MapGrpcService<DiscountService>();
+        //app.MapGrpcService<GreeterService>();
 
         return app;
     }
