@@ -1,0 +1,21 @@
+﻿syntax = "proto3";
+
+option csharp_namespace = "Grpc.Discount"; 
+
+package discount; 
+
+import "CustomTypes/custom_types.proto";
+
+service DiscountGrpcService{
+	rpc GetDiscount(GetDiscountRequest) returns (Discount);
+}
+
+message GetDiscountRequest{
+	string code = 1;
+}
+
+message Discount{
+	int32 id = 1;
+	string code = 2;
+	grpc.customtypes.GrpcDecimal amount = 3;
+}
