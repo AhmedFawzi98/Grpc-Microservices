@@ -19,9 +19,5 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Shared\Shared\Shared.csproj" />
   </ItemGroup>
-	
-  <ItemGroup>
-    <Folder Include="GrpcServices\" />
-  </ItemGroup>
 
 </Project>
