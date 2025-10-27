@@ -1,0 +1,27 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Grpc.AspNetCore" Version="2.64.0" />
+  </ItemGroup>
+
+	  <ItemGroup>
+	  <Protobuf Include="..\..\Shared\Shared\Protos\Discount\*.proto" GrpcServices="Server" OutputDir="$(IntermediateOutputPath)Protos" ProtoRoot="..\..\Shared\Shared\Protos" />
+	  
+	  <Protobuf Include="..\..\Shared\Shared\Protos\CustomTypes\*.proto" GrpcServices="None" OutputDir="$(IntermediateOutputPath)Protos" ProtoRoot="..\..\Shared\Shared\Protos" />
+  </ItemGroup>
+	
+  <ItemGroup>
+    <ProjectReference Include="..\..\Shared\Shared\Shared.csproj" />
+  </ItemGroup>
+	
+  <ItemGroup>
+    <Folder Include="GrpcServices\" />
+  </ItemGroup>
+
+</Project>
