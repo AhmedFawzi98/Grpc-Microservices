@@ -4,15 +4,23 @@
     "Projects": [
       {
         "Path": "ProductServices\\Product\\Product.csproj",
-        "Action": "Start"
-      },
-      {
-        "Path": "ProductServices\\ProductClient\\ProductClient.csproj",
-        "Action": "Start"
+        "Action": "Start",
+        "DebugTarget": "https"
       },
       {
         "Path": "ShoppingCartServices\\ShoppingCart\\ShoppingCart.csproj",
-        "Action": "Start"
+        "Action": "Start",
+        "DebugTarget": "https"
+      },
+      {
+        "Path": "DiscountServices\\Discount\\Discount.csproj",
+        "Action": "Start",
+        "DebugTarget": "https"
+      },
+      {
+        "Path": "ShoppingCartServices\\ShoppingCartClient\\ShoppingCartClient.csproj",
+        "Action": "Start",
+        "DebugTarget": "ShoppingCartClient"
       }
     ]
   }

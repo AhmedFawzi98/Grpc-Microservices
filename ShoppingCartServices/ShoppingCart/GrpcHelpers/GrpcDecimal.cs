@@ -17,6 +17,9 @@ public partial class GrpcDecimal
 
     public static implicit operator GrpcDecimal(decimal value)
     {
+        if (value == 0m)
+            return new GrpcDecimal(0, 0);
+
         var units = decimal.ToInt64(value);
         var nanos = decimal.ToInt32(
                         decimal.Round((value - units) * NanoFactor, MidpointRounding.AwayFromZero)

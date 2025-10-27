@@ -1,10 +1,11 @@
 ﻿using AutoMapper;
+using Google.Protobuf.Collections;
 using Grpc.Core;
 using Grpc.ShoppingCart;
 using Microsoft.EntityFrameworkCore;
 using ShoppingCart.Data;
+using ShoppingCart.Data.Models;
 using ShoppingCart.Integration;
-using static Grpc.Discount.DiscountGrpcService;
 using static Grpc.ShoppingCart.ShoppingCartGrpcService;
 using ShoppingCartEntity = ShoppingCart.Data.Models.ShoppingCart;
 using ShoppingCartItemEntity = ShoppingCart.Data.Models.ShoppingCartItem;
@@ -18,15 +19,16 @@ public class ShoppingCartService(
     IMapper mapper)
     : ShoppingCartGrpcServiceBase
 {
-    public override async Task<Grpc.ShoppingCart.ShoppingCart> GetShoppingCart(GetShoppingCartRequest request, ServerCallContext context)
+    public override async Task<ShoppingCartResponse> GetShoppingCart(GetShoppingCartRequest request, ServerCallContext context)
     {
         var shoppingCart = await shoppingCartDbContext
             .ShoppingCarts
+            .Include(sc => sc.Items)
             .FirstOrDefaultAsync(sc => sc.UserName == request.Username);
 
         if(shoppingCart == null)
         {
-            //throw rpc exception
+            throw new RpcException(new Status(StatusCode.NotFound, $"shopping cart with username: {request.Username} does not exist."));
         }
 
         var shoppingCartResponse = mapper.Map<ShoppingCartResponse>(shoppingCart);
@@ -39,37 +41,16 @@ public class ShoppingCartService(
         var isExist = await shoppingCartDbContext.ShoppingCarts.AnyAsync(sc => sc.UserName == request.Username);
         if(isExist)
         {
-            //throw rpcexception 
+            throw new RpcException(new Status(StatusCode.AlreadyExists, $"shopping cart with username: {request.Username} already exist."));
         }
 
         var shoppingCart = mapper.Map<ShoppingCartEntity>(request);
 
-        var items = new List<ShoppingCartItemToAdd>();
-        foreach (var itemToAdd in request.ShoppingCartItems)
+        if (request.ShoppingCartItems != null)
         {
-            var existingItemOfSameType = items.FirstOrDefault(i => i.ProductId == itemToAdd.ProductId && i.Color == itemToAdd.Color);
-            if(existingItemOfSameType == null)
-            {
-                items.Add(itemToAdd);
-            }
-            else
-            {
-                existingItemOfSameType.Quantity += itemToAdd.Quantity;
-            }
-        }
+            await AddShoppingCartItemsAsync(shoppingCart, request);
+        }        
 
-        var shoppingCartItemEntities = mapper.Map<List<ShoppingCartItemEntity>>(items);
-
-        var discountDto = await discountIntegrationService.GetDiscountAsync(request.DiscountCode);
-
-        foreach (var shoppingCartItemEntity in shoppingCartItemEntities)
-        {
-            shoppingCartItemEntity.Price -= discountDto.Amount;
-        }
-
-        shoppingCart.Items.AddRange(shoppingCartItemEntities);
-
-        shoppingCartDbContext.ShoppingCarts.Add(shoppingCart);  
         await shoppingCartDbContext.SaveChangesAsync();
 
         var shoppingCartResponse = mapper.Map<ShoppingCartResponse>(shoppingCart);
@@ -105,9 +86,13 @@ public class ShoppingCartService(
 
     public override async Task<AddItemIntoShoppingCartResponse> AddItemIntoShoppingCart(IAsyncStreamReader<AddItemIntoShoppingCartRequest> requestStream, ServerCallContext context)
     {
+        ShoppingCartEntity shoppingCart = null;
         await foreach (var addItemIntoShoppingCartRequest in requestStream.ReadAllAsync())
         {
-            var shoppingCart = shoppingCartDbContext.ShoppingCarts
+            if (addItemIntoShoppingCartRequest.ShoppingCartItem == null)
+                continue;
+
+            shoppingCart = shoppingCartDbContext.ShoppingCarts
                     .Local
                     .FirstOrDefault(sc => sc.UserName == addItemIntoShoppingCartRequest.Username) 
                     ?? await shoppingCartDbContext.ShoppingCarts
@@ -131,7 +116,7 @@ public class ShoppingCartService(
                 var shoppingCartItemEntity = mapper.Map<ShoppingCartItemEntity>(shoppingCartItemToAdd);
 
                 var discountDto = await discountIntegrationService.GetDiscountAsync(addItemIntoShoppingCartRequest.DiscountCode);
-                shoppingCartItemEntity.Price -= discountDto.Amount;
+                shoppingCartItemEntity.Price = Math.Max(0, shoppingCartItemEntity.Price - discountDto.Amount);
 
                 shoppingCart!.Items.Add(shoppingCartItemEntity);
             }
@@ -141,11 +126,45 @@ public class ShoppingCartService(
             }
         }
 
+        Console.WriteLine(shoppingCart.Items.Count);
         await shoppingCartDbContext.SaveChangesAsync();
+        Console.WriteLine(shoppingCart.Items.Count);
 
         return new AddItemIntoShoppingCartResponse()
         {
             Sucess = true,
         };
     }
+
+    private async Task AddShoppingCartItemsAsync(ShoppingCartEntity shoppingCart, AddShoppingCartRequest request)
+    {
+        var items = new List<ShoppingCartItemToAdd>();
+
+        foreach (var itemToAdd in request.ShoppingCartItems)
+        {
+            var existingItemOfSameType = items.FirstOrDefault(i => i.ProductId == itemToAdd.ProductId && i.Color == itemToAdd.Color);
+            if (existingItemOfSameType == null)
+            {
+                items.Add(itemToAdd);
+            }
+            else
+            {
+                existingItemOfSameType.Quantity += itemToAdd.Quantity;
+            }
+        }
+
+        var shoppingCartItemEntities = mapper.Map<List<ShoppingCartItemEntity>>(items);
+
+        var discountDto = await discountIntegrationService.GetDiscountAsync(request.DiscountCode);
+
+        foreach (var shoppingCartItemEntity in shoppingCartItemEntities)
+        {
+            shoppingCartItemEntity.Price = Math.Max(0, shoppingCartItemEntity.Price - discountDto.Amount);
+        }
+
+        shoppingCart.Items.AddRange(shoppingCartItemEntities);
+
+        shoppingCartDbContext.ShoppingCarts.Add(shoppingCart);
+    }
+
 }
