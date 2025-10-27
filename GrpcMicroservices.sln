@@ -4,9 +4,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 17.14.36327.8
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documentation", "Documentation", "{8EC462FD-D22E-90A8-E5CE-7E832BA40C5D}"
-	ProjectSection(SolutionItems) = preProject
-		Documentation\Services-Diagram.png = Documentation\Services-Diagram.png
-	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ProductServices", "ProductServices", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
 EndProject
@@ -21,10 +18,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProductClient", "ProductServices\ProductClient\ProductClient.csproj", "{648B4243-F102-1636-2081-A0955CB3C632}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShoppingCart", "ShoppingCartServices\ShoppingCart\ShoppingCart.csproj", "{BBED86C3-8F49-4811-9303-6A5EB0F04F48}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DiscountServices", "DiscountServices", "{35A20554-11A0-4B95-88AB-625C2A25B581}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Discount", "DiscountServices\Discount\Discount.csproj", "{47F337A5-2C83-4D00-B943-47294CD9C87A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -48,10 +41,6 @@ Global
 		{BBED86C3-8F49-4811-9303-6A5EB0F04F48}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BBED86C3-8F49-4811-9303-6A5EB0F04F48}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BBED86C3-8F49-4811-9303-6A5EB0F04F48}.Release|Any CPU.Build.0 = Release|Any CPU
-		{47F337A5-2C83-4D00-B943-47294CD9C87A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{47F337A5-2C83-4D00-B943-47294CD9C87A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{47F337A5-2C83-4D00-B943-47294CD9C87A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{47F337A5-2C83-4D00-B943-47294CD9C87A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -61,7 +50,6 @@ Global
 		{2E9693AE-DDBF-422A-8011-21054974DDBE} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 		{648B4243-F102-1636-2081-A0955CB3C632} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 		{BBED86C3-8F49-4811-9303-6A5EB0F04F48} = {E5B0488C-CC06-4BC5-AF4D-48E0876E2EFD}
-		{47F337A5-2C83-4D00-B943-47294CD9C87A} = {35A20554-11A0-4B95-88AB-625C2A25B581}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {64A1311E-C35B-45C2-A917-F9F00BE318F7}
