@@ -1,10 +1,10 @@
 ﻿namespace Grpc.CustomTypes;
 
-public partial class GrpcDecimal 
+public partial class GrpcDecimal
 {
     private const decimal NanoFactor = 1_000_000_000m;
 
-    public GrpcDecimal(long units, int nanos) 
+    public GrpcDecimal(long units, int nanos)
     {
         Units = units;
         Nanos = nanos;
@@ -12,6 +12,7 @@ public partial class GrpcDecimal
 
     public static implicit operator decimal(GrpcDecimal grpcDecimal)
     {
+        if (grpcDecimal is null) return 0m;
         return grpcDecimal.Units + (grpcDecimal.Nanos / NanoFactor);
     }
 
@@ -21,9 +22,7 @@ public partial class GrpcDecimal
             return new GrpcDecimal(0, 0);
 
         var units = decimal.ToInt64(value);
-        var nanos = decimal.ToInt32(
-                        decimal.Round((value - units) * NanoFactor, MidpointRounding.AwayFromZero)
-                    );
+        var nanos = decimal.ToInt32((value - units) * NanoFactor);
 
         return new GrpcDecimal(units, nanos);
     }

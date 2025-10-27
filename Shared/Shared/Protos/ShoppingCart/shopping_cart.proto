@@ -57,7 +57,7 @@ message ShoppingCart{
 	int32 id = 1;
 	string username = 2;
 	repeated ShoppingCartItem shopping_cart_items = 3;
-	int32 total_price = 4;
+	grpc.customtypes.GrpcDecimal total_price = 4;
 }
 
 message ShoppingCartItem{

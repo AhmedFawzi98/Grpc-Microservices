@@ -12,16 +12,15 @@ public partial class GrpcDecimal
 
     public static implicit operator decimal(GrpcDecimal grpcDecimal)
     {
+        if (grpcDecimal is null) return 0m; 
         return grpcDecimal.Units + (grpcDecimal.Nanos / NanoFactor);
     }
 
     public static implicit operator GrpcDecimal(decimal value)
     {
         var units = decimal.ToInt64(value);
-        var nanos = decimal.ToInt32(
-                        decimal.Round((value - units) * NanoFactor, MidpointRounding.AwayFromZero)
-                    );
-
+        var nanos = decimal.ToInt32((value - units) * NanoFactor);
+                    
         return new GrpcDecimal(units, nanos);
     }
 }
