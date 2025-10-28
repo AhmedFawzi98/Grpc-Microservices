@@ -10,4 +10,9 @@
 	  <None Include="Protos\**\*.proto" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Grpc.Core.Api" Version="2.71.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="9.0.10" />
+  </ItemGroup>
+
 </Project>

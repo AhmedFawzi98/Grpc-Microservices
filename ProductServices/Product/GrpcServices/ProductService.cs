@@ -22,7 +22,7 @@ public class ProductService(ProductDbContext productDbContext, IMapper mapper) :
         var product = await productDbContext.Products.FindAsync(request.Id);
         if (product == null)
         {
-            //throw rpc exception
+            throw new RpcException(new Status(StatusCode.NotFound, $"product with id: {request.Id} does not exist."));
         }
 
         var productResponse = mapper.Map<ProductResponse>(product);
@@ -63,7 +63,7 @@ public class ProductService(ProductDbContext productDbContext, IMapper mapper) :
         var product = await productDbContext.Products.FindAsync(request.Id);
         if(product == null)
         {
-            //throw rpc exception
+            throw new RpcException(new Status(StatusCode.NotFound, $"product with id: {request.Id} does not exist."));
         }
 
         mapper.Map(request, product);
@@ -80,7 +80,7 @@ public class ProductService(ProductDbContext productDbContext, IMapper mapper) :
         var product = await productDbContext.Products.FindAsync(request.Id);
         if (product == null)
         {
-            //throw rpc exception
+            throw new RpcException(new Status(StatusCode.NotFound, $"product with id: {request.Id} does not exist."));
         }
 
         productDbContext.Products.Remove(product!);

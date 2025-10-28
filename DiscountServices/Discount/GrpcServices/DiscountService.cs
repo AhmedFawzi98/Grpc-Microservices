@@ -12,7 +12,7 @@ public class DiscountService(DiscountContext discountContext) : DiscountGrpcServ
         var discount = discountContext.Discounts.FirstOrDefault(d => d.Code == request.Code);
         if (discount == null)
         {
-            //throw rpc excpetion
+            throw new RpcException(new Status(StatusCode.NotFound, $"discount with code: {request.Code} does not exist."));
         }
 
         var discountResponse = new Grpc.Discount.Discount()

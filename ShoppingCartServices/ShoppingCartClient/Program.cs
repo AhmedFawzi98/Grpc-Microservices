@@ -1,10 +1,9 @@
-﻿using Duende.IdentityModel.Client;
-using Grpc.Core;
+﻿using Grpc.Core;
 using Grpc.Product;
 using Grpc.ShoppingCart;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using ShoppingCartClient.Clients;
+using Shared.Interceptors;
 using ShoppingCartClient.Services;
 using static Grpc.Core.Metadata;
 using static Grpc.Product.ProductGrpcService;
@@ -20,7 +19,9 @@ using var host = Host.CreateDefaultBuilder(args)
         services.AddGrpcClient<ShoppingCartGrpcServiceClient>(options =>
         {
             options.Address = new Uri("https://localhost:5002");
-        });
+        })
+        .AddInterceptor<ClientLoggingInterceptor>(Grpc.Net.ClientFactory.InterceptorScope.Client);
+
         services.AddHttpClient("Auth", options =>
         {
             options.BaseAddress = new Uri("https://localhost:5005");
@@ -28,6 +29,8 @@ using var host = Host.CreateDefaultBuilder(args)
 
         services.AddSingleton<ShoppingCartRunner>();
         services.AddSingleton<TokenService>();
+
+        services.AddTransient<ClientLoggingInterceptor>();
     })
     .Build();
 
@@ -117,10 +120,10 @@ public class ShoppingCartRunner(
             new Entry("Authorization", $"Bearer {token}"),
         };
 
-        var asyncClientStreamingCall = shoppingCartGrpcServiceClient.AddItemIntoShoppingCart(headers);
+        using var asyncClientStreamingCall = shoppingCartGrpcServiceClient.AddItemIntoShoppingCart(headers);
 
         var getAllProductsRequest = new GetAllProductsRequest() { };
-        var asyncServerStreamingCall = productGrpcServiceClient.GetAllProducts(getAllProductsRequest, headers);
+        using var asyncServerStreamingCall = productGrpcServiceClient.GetAllProducts(getAllProductsRequest, headers);
 
         await foreach (var product in asyncServerStreamingCall.ResponseStream.ReadAllAsync())
         {

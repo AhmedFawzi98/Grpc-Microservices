@@ -1,11 +1,9 @@
 ﻿using AutoMapper;
-using Google.Protobuf.Collections;
 using Grpc.Core;
 using Grpc.ShoppingCart;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using ShoppingCart.Data;
-using ShoppingCart.Data.Models;
 using ShoppingCart.Integration;
 using static Grpc.ShoppingCart.ShoppingCartGrpcService;
 using ShoppingCartEntity = ShoppingCart.Data.Models.ShoppingCart;
@@ -68,13 +66,13 @@ public class ShoppingCartService(
 
         if (shoppingCart == null)
         {
-            // throw rpc exception 
+            throw new RpcException(new Status(StatusCode.NotFound, $"shopping cart with username: {request.Username} does not exist."));
         }
 
         var shoppingCartItem = shoppingCart.Items.FirstOrDefault(i => i.Id == request.ShoppingCartItemId);
         if (shoppingCartItem == null)
         {
-            // throw rpc exception 
+            throw new RpcException(new Status(StatusCode.NotFound, $"shopping cart item with id: {request.ShoppingCartItemId} does not exist in shopping cart with username: {request.Username}."));
         }
 
         shoppingCartDbContext.ShoppingCartItems.Remove(shoppingCartItem!);
@@ -103,7 +101,7 @@ public class ShoppingCartService(
             
             if (shoppingCart == null)
             {
-                // throw rpc exception 
+                throw new RpcException(new Status(StatusCode.NotFound, $"shopping cart with username: {addItemIntoShoppingCartRequest.Username} does not exist."));
             }
 
             var shoppingCartItemToAdd = addItemIntoShoppingCartRequest.ShoppingCartItem;
@@ -128,9 +126,7 @@ public class ShoppingCartService(
             }
         }
 
-        Console.WriteLine(shoppingCart.Items.Count); 
         await shoppingCartDbContext.SaveChangesAsync();
-        Console.WriteLine(shoppingCart.Items.Count);
 
         return new AddItemIntoShoppingCartResponse()
         {

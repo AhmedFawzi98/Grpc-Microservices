@@ -2,6 +2,7 @@
 using Microsoft.IdentityModel.Tokens;
 using Product.Data.Constants;
 using Shared.DbSeeding;
+using Shared.Interceptors;
 using ShoppingCart.Data;
 using ShoppingCart.HostedServices;
 using ShoppingCart.Integration;
@@ -12,9 +13,16 @@ namespace ShoppingCart.Extensions;
 
 public static class IServiceCollectionExtension
 {
-    public static IServiceCollection AddServices(this IServiceCollection services, IConfiguration configuration)
+    public static IServiceCollection AddServices(this IServiceCollection services, IConfiguration configuration, IWebHostEnvironment env)
     {
-        services.AddGrpc();
+        services.AddGrpc(options =>
+        {
+            if (env.IsDevelopment())
+                options.EnableDetailedErrors = true;
+
+            options.Interceptors.Add<ServerGrpcExceptionsInterceptor>();
+            options.Interceptors.Add<ServerLoggingInterceptor>();
+        });
 
         AddAuth(services, configuration);
 
