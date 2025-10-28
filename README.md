@@ -37,7 +37,7 @@ This was done intentionally to **focus on gRPC concepts** without the added comp
 ##  Documentation
 
  an overview of the services and their interactions:  
-![Services Diagram](Documentation/Services-Diagram.jpg)
+![Services Diagram](Documentation/Services-Diagram.png)
 
 ---
 
