@@ -8,6 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Duende.IdentityModel" Version="7.1.0" />
     <PackageReference Include="Google.Protobuf" Version="3.33.0" />
     <PackageReference Include="Grpc.Net.ClientFactory" Version="2.71.0" />
     <PackageReference Include="Grpc.Tools" Version="2.76.0">
@@ -22,20 +23,11 @@
   </ItemGroup>
 
 	<ItemGroup>
-		<Protobuf Include="..\..\Shared\Shared\Protos\Product\*.proto"
-				  GrpcServices="Clinet"
-				  OutputDir="$(IntermediateOutputPath)Protos"
-				  ProtoRoot="..\..\Shared\Shared\Protos" />
+		<Protobuf Include="..\..\Shared\Shared\Protos\Product\*.proto" GrpcServices="Clinet" OutputDir="$(IntermediateOutputPath)Protos" ProtoRoot="..\..\Shared\Shared\Protos" />
 		
-		<Protobuf Include="..\..\Shared\Shared\Protos\ShoppingCart\*.proto"
-				  GrpcServices="Clinet"
-				  OutputDir="$(IntermediateOutputPath)Protos"
-				  ProtoRoot="..\..\Shared\Shared\Protos" />
+		<Protobuf Include="..\..\Shared\Shared\Protos\ShoppingCart\*.proto" GrpcServices="Clinet" OutputDir="$(IntermediateOutputPath)Protos" ProtoRoot="..\..\Shared\Shared\Protos" />
 		
-		<Protobuf Include="..\..\Shared\Shared\Protos\CustomTypes\*.proto"
-				  GrpcServices="None"
-				  OutputDir="$(IntermediateOutputPath)Protos"
-				  ProtoRoot="..\..\Shared\Shared\Protos" />
+		<Protobuf Include="..\..\Shared\Shared\Protos\CustomTypes\*.proto" GrpcServices="None" OutputDir="$(IntermediateOutputPath)Protos" ProtoRoot="..\..\Shared\Shared\Protos" />
 	</ItemGroup>
 
 </Project>

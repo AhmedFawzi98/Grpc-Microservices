@@ -1,8 +1,12 @@
-﻿using Grpc.Core;
+﻿using Duende.IdentityModel.Client;
+using Grpc.Core;
 using Grpc.Product;
 using Grpc.ShoppingCart;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using ShoppingCartClient.Clients;
+using ShoppingCartClient.Services;
+using static Grpc.Core.Metadata;
 using static Grpc.Product.ProductGrpcService;
 using static Grpc.ShoppingCart.ShoppingCartGrpcService;
 
@@ -17,8 +21,13 @@ using var host = Host.CreateDefaultBuilder(args)
         {
             options.Address = new Uri("https://localhost:5002");
         });
+        services.AddHttpClient("Auth", options =>
+        {
+            options.BaseAddress = new Uri("https://localhost:5005");
+        });
 
         services.AddSingleton<ShoppingCartRunner>();
+        services.AddSingleton<TokenService>();
     })
     .Build();
 
@@ -47,17 +56,28 @@ Console.ReadLine();
 
 
 
-public class ShoppingCartRunner(ProductGrpcServiceClient productGrpcServiceClient, ShoppingCartGrpcServiceClient shoppingCartGrpcServiceClient)
+public class ShoppingCartRunner(
+    ProductGrpcServiceClient productGrpcServiceClient,
+    ShoppingCartGrpcServiceClient shoppingCartGrpcServiceClient,
+    TokenService tokenService)
 {
     public async Task<ShoppingCart> GetOrCreateShoppingCart(string username)
     {
+
         Console.WriteLine("-------------- GetOrCreateShoppingCart starts ----------------");
+
+        var token = await tokenService.GetTokensync();
+
+        var headers = new Metadata()
+        {
+            new Entry("Authorization", $"Bearer {token}"),
+        };
 
         ShoppingCart shoppingCart = default!;
         try
         {
             var getShoppingCartrequest = new GetShoppingCartRequest() { Username = username };  
-            shoppingCart = await shoppingCartGrpcServiceClient.GetShoppingCartAsync(getShoppingCartrequest);
+            shoppingCart = await shoppingCartGrpcServiceClient.GetShoppingCartAsync(getShoppingCartrequest, headers);
         }
         catch (RpcException getShoppingCartRpcException)
         {
@@ -68,7 +88,7 @@ public class ShoppingCartRunner(ProductGrpcServiceClient productGrpcServiceClien
                 try
                 {
                     var addShoppingCartRequest = new AddShoppingCartRequest() { DiscountCode = "CODE_100", Username = username };
-                    shoppingCart = await shoppingCartGrpcServiceClient.AddShoppingCartAsync(addShoppingCartRequest);
+                    shoppingCart = await shoppingCartGrpcServiceClient.AddShoppingCartAsync(addShoppingCartRequest, headers);
                 }
                 catch (RpcException addShoppingCartRpcException)
                 {
@@ -90,10 +110,17 @@ public class ShoppingCartRunner(ProductGrpcServiceClient productGrpcServiceClien
 
     public async Task<bool> FetchProductAndAddItemsToShoppingCart(ShoppingCart shoppingCart)
     {
-        var asyncClientStreamingCall = shoppingCartGrpcServiceClient.AddItemIntoShoppingCart();
+        var token = await tokenService.GetTokensync();
+
+        var headers = new Metadata()
+        {
+            new Entry("Authorization", $"Bearer {token}"),
+        };
+
+        var asyncClientStreamingCall = shoppingCartGrpcServiceClient.AddItemIntoShoppingCart(headers);
 
         var getAllProductsRequest = new GetAllProductsRequest() { };
-        var asyncServerStreamingCall = productGrpcServiceClient.GetAllProducts(getAllProductsRequest);
+        var asyncServerStreamingCall = productGrpcServiceClient.GetAllProducts(getAllProductsRequest, headers);
 
         await foreach (var product in asyncServerStreamingCall.ResponseStream.ReadAllAsync())
         {
@@ -121,3 +148,4 @@ public class ShoppingCartRunner(ProductGrpcServiceClient productGrpcServiceClien
         return addItemIntoShoppingCartResponse.Sucess;
     }
 }
+

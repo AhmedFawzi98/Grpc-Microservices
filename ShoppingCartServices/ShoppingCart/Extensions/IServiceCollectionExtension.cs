@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Product.Data.Constants;
 using Shared.DbSeeding;
 using ShoppingCart.Data;
@@ -15,8 +16,10 @@ public static class IServiceCollectionExtension
     {
         services.AddGrpc();
 
-        AddGrpcTypedClients(services, configuration);
+        AddAuth(services, configuration);
 
+        AddGrpcTypedClients(services, configuration);
+        
         AddDataAccessServices(services, configuration);
 
         AddApplicationServices(services, configuration);
@@ -24,6 +27,21 @@ public static class IServiceCollectionExtension
         AddUtilitiesServices(services, configuration);
 
         return services;
+    }
+
+    private static void AddAuth(IServiceCollection services, IConfiguration configuration)
+    {
+        services.AddAuthentication("Bearer")
+            .AddJwtBearer("Bearer", options =>
+            {
+                options.Authority = "https://localhost:5005";
+                options.TokenValidationParameters = new TokenValidationParameters()
+                {
+                    ValidateAudience = false
+                };
+            });
+
+        services.AddAuthorization();
     }
 
     private static void AddDataAccessServices(IServiceCollection services, IConfiguration configuration)

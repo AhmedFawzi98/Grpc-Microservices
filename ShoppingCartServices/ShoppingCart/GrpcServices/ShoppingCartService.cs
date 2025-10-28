@@ -2,6 +2,7 @@
 using Google.Protobuf.Collections;
 using Grpc.Core;
 using Grpc.ShoppingCart;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using ShoppingCart.Data;
 using ShoppingCart.Data.Models;
@@ -13,6 +14,7 @@ using ShoppingCartResponse = Grpc.ShoppingCart.ShoppingCart;
 
 namespace ShoppingCart.GrpcServices;
 
+[Authorize]
 public class ShoppingCartService(
     ShoppingCartDbContext shoppingCartDbContext,
     IDiscountIntegrationService discountIntegrationService,
@@ -126,7 +128,7 @@ public class ShoppingCartService(
             }
         }
 
-        Console.WriteLine(shoppingCart.Items.Count);
+        Console.WriteLine(shoppingCart.Items.Count); 
         await shoppingCartDbContext.SaveChangesAsync();
         Console.WriteLine(shoppingCart.Items.Count);
 

@@ -8,6 +8,10 @@ public static class WebApplicationExtensions
     {
         app.MapGrpcService<ShoppingCartService>();
 
+        app.UseAuthentication();
+        
+        app.UseAuthorization();
+
         return app;
     }
 }

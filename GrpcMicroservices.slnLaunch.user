@@ -3,6 +3,11 @@
     "Name": "New Profile",
     "Projects": [
       {
+        "Path": "AuthenticationService\\Authentication\\Authentication.csproj",
+        "Action": "Start",
+        "DebugTarget": "https"
+      },
+      {
         "Path": "ProductServices\\Product\\Product.csproj",
         "Action": "Start",
         "DebugTarget": "https"
